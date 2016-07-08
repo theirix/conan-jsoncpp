@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/theirix/conan-jsoncpp.svg)](https://travis-ci.org/theirix/conan-jsoncpp)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/theirix/conan-lbevent)](https://ci.appveyor.com/project/theirix/conan-jsoncpp)
 
 # conan-jsoncpp
 
