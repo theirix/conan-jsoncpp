@@ -2,7 +2,7 @@
 
 # conan-jsoncpp
 
-[Conan.io](https://conan.io) package for [jsoncpp](https://github.com/jsoncpp/jsoncpp) library
+[Conan.io](https://conan.io) package for [jsoncpp](https://github.com/open-source-parsers/jsoncpp) library
 
 The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/jsoncpp/1.7.3/theirix/stable).
 
