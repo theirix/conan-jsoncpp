@@ -47,11 +47,17 @@ class JsoncppConan(ConanFile):
         self.copy("*.h", dst="include", src="%s/include" % (self.FOLDER_NAME))
         if self.options.shared:
             if self.settings.os == "Macos":
-                self.copy(pattern="*.dylib", dst="lib", keep_path=False)
+                self.copy(pattern="*.dylib", dst="lib", src="lib", keep_path=False)
+            elif self.settings.os == "Windows":
+                self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
+                self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
             else:
-                self.copy(pattern="*.so*", dst="lib", keep_path=False)
+                self.copy(pattern="*.so*", dst="lib", src="lib", keep_path=False)
         else:
-            self.copy(pattern="*.a", dst="lib", keep_path=False)
+            if self.settings.os == "Windows":
+                self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
+            else:
+                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
