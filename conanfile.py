@@ -5,7 +5,7 @@ import shutil
 
 class JsoncppConan(ConanFile):
     name = "jsoncpp"
-    version = "1.7.3"
+    version = "1.7.5"
     url = "https://github.com/theirix/conan-jsoncpp"
     license = "https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE"
     FOLDER_NAME = 'jsoncpp-%s' % version
@@ -21,7 +21,7 @@ class JsoncppConan(ConanFile):
     def source(self):
         tarball_name = self.FOLDER_NAME + '.tar.gz'
         download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
-        check_sha1(tarball_name, "295ab57a03fddf1e27cb7e22be15c7cc2695a405")
+        check_sha1(tarball_name, "c2fe4d67273b8e44f347c68f4491ed867b369b24")
         untargz(tarball_name)
         os.unlink(tarball_name)
         shutil.move("%s/CMakeLists.txt" % self.FOLDER_NAME, "%s/CMakeListsOriginal.cmake" % self.FOLDER_NAME)
