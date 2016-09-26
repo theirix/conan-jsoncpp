@@ -15,9 +15,6 @@ class JsoncppConan(ConanFile):
     exports = "CMakeLists.txt"
     generators = "cmake", "txt"
 
-    def config(self):
-        pass
-
     def source(self):
         tarball_name = self.FOLDER_NAME + '.tar.gz'
         download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
