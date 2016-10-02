@@ -5,7 +5,7 @@ environment:
     PYTHON_ARCH: "64"
 
     CONAN_UPLOAD: 1
-    CONAN_REFERENCE: "jsoncpp/1.7.5"
+    CONAN_REFERENCE: "jsoncpp/1.7.7"
     CONAN_USERNAME: "theirix"
     CONAN_CHANNEL: "ci"
     CONAN_TOTAL_PAGES: 4

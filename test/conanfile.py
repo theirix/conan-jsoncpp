@@ -9,7 +9,7 @@ class DefaultNameConan(ConanFile):
     name = "DefaultName"
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
-    requires = "jsoncpp/1.7.5@%s/%s" % (username, channel)
+    requires = "jsoncpp/1.7.7@%s/%s" % (username, channel)
     generators = "cmake"
 
     def build(self):
