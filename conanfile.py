@@ -11,7 +11,7 @@ class JsoncppConan(ConanFile):
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     FOLDER_NAME = 'jsoncpp-%s' % version
-    settings    = "os", "compiler", "arch"
+    settings    = "os", "compiler", "arch", "build_type"
 
     exports     = "CMakeLists.txt"
     generators  = "cmake", "txt"
