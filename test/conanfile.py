@@ -1,15 +1,17 @@
 from conans import ConanFile, CMake
 import os
+from os import path
 
 # This easily allows to copy the package in other user or channel
-channel = os.getenv("CONAN_CHANNEL", "stable")
+channel = os.getenv("CONAN_CHANNEL", "testing")
 username = os.getenv("CONAN_USERNAME", "theirix")
+pkg_version = "1.8.0"
 
 class DefaultNameConan(ConanFile):
     name = "DefaultName"
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
-    requires = "jsoncpp/1.7.7@%s/%s" % (username, channel)
+    requires = "jsoncpp/%s@%s/%s" % (pkg_version, username, channel)
     generators = "cmake"
 
     def build(self):
@@ -23,4 +25,4 @@ class DefaultNameConan(ConanFile):
         self.copy(pattern="*.dylib", dst="bin", src="lib")
 
     def test(self):
-        self.run("cd bin && .%stestapp" % os.sep)
+        self.run(path.join(".", "testapp"), cwd="bin")

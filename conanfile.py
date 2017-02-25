@@ -1,44 +1,61 @@
-from conans import ConanFile, CMake
+from conans import ConanFile, CMake, ConfigureEnvironment
 from conans.tools import download, untargz, check_sha1, replace_in_file
 import os
 import shutil
+from os import path
 
 class JsoncppConan(ConanFile):
-    name = "jsoncpp"
-    version = "1.7.7"
-    url = "https://github.com/theirix/conan-jsoncpp"
-    license = "https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE"
+    name        = "jsoncpp"
+    version     = "1.8.0"
+    description = "A C++ library for interacting with JSON. "
+    url         = "https://github.com/theirix/conan-jsoncpp"
+    license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     FOLDER_NAME = 'jsoncpp-%s' % version
-    settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
-    exports = "CMakeLists.txt"
-    generators = "cmake", "txt"
+    settings    = "os", "compiler", "arch"
+    
+    exports     = "CMakeLists.txt"
+    generators  = "cmake", "txt"
+
+    options         = {
+        "shared"    : [True, False], 
+        "use_pic"   : [True, False]
+    }
+    default_options = (
+        "shared=False", 
+        "use_pic=False"
+    )
+    
+    SHA1 = "40f7f34551012f68e822664a0b179e7e6cac5a97"
+
+    requires = "cmake_installer/0.1@lasote/stable"
+
+    def configure(self):
+        if self.options.shared:
+            self.options.use_pic = True
 
     def source(self):
+        self.output.info("downloading source ...")
+        
         tarball_name = self.FOLDER_NAME + '.tar.gz'
         download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
-        check_sha1(tarball_name, "7bbb47e25b3aa7c4c8b579ca46b32d55f32cb46e")
+        check_sha1(tarball_name, self.SHA1)
         untargz(tarball_name)
         os.unlink(tarball_name)
-        shutil.move("%s/CMakeLists.txt" % self.FOLDER_NAME, "%s/CMakeListsOriginal.cmake" % self.FOLDER_NAME)
-        shutil.move("CMakeLists.txt", "%s/CMakeLists.txt" % self.FOLDER_NAME)
+        
+        cmakefile = path.join(self.FOLDER_NAME, "CMakeLists.txt") 
+        shutil.move(cmakefile, path.join(self.FOLDER_NAME, "CMakeListsOriginal.cmake"))
+        shutil.move("CMakeLists.txt", cmakefile)
 
     def build(self):
-
+        env = ConfigureEnvironment(self)
         cmake = CMake(self.settings)
 
-        # compose cmake options
-        extra_command_line = '-DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_TESTS=OFF'
-        if self.options.shared:
-            extra_command_line += " -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF"
-        else:
-            extra_command_line += " -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON"
+        cmakefile_path = path.join(self.conanfile_directory, self.FOLDER_NAME)
 
-        cmd = 'cmake %s/%s %s %s' % (self.conanfile_directory, self.FOLDER_NAME, cmake.command_line, extra_command_line)
-        self.output.warn('Running CMake: ' + cmd)
+        cmd = '%s cmake %s %s %s' % (env.command_line, cmakefile_path, cmake.command_line, self.cmake_options())
+        self.output.info('Running CMake: ' + cmd)
         self.run(cmd)
-        self.run("cmake --build . %s" % cmake.build_config)
+        self.run("%s cmake --build . %s" % (env.command_line, cmake.build_config))
 
     def package(self):
         self.copy("*.h", dst="include", src="%s/include" % (self.FOLDER_NAME))
@@ -58,3 +75,15 @@ class JsoncppConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
+
+    def cmake_options(self):
+        extra_command_line = '-DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_TESTS=OFF'
+        if self.options.shared:
+            extra_command_line += " -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF"
+        else:
+            extra_command_line += " -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON"
+            
+        if self.options.use_pic:
+            extra_command_line += " -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
+    
+        return extra_command_line
