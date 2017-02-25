@@ -13,19 +13,19 @@ class JsoncppConan(ConanFile):
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     FOLDER_NAME = 'jsoncpp-%s' % version
     settings    = "os", "compiler", "arch"
-    
+
     exports     = "CMakeLists.txt"
     generators  = "cmake", "txt"
 
     options         = {
-        "shared"    : [True, False], 
+        "shared"    : [True, False],
         "use_pic"   : [True, False]
     }
     default_options = (
-        "shared=False", 
+        "shared=False",
         "use_pic=False"
     )
-    
+
     SHA1 = "40f7f34551012f68e822664a0b179e7e6cac5a97"
 
     requires = "cmake_installer/0.1@lasote/stable"
@@ -36,14 +36,14 @@ class JsoncppConan(ConanFile):
 
     def source(self):
         self.output.info("downloading source ...")
-        
+
         tarball_name = self.FOLDER_NAME + '.tar.gz'
         download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
         check_sha1(tarball_name, self.SHA1)
         untargz(tarball_name)
         os.unlink(tarball_name)
-        
-        cmakefile = path.join(self.FOLDER_NAME, "CMakeLists.txt") 
+
+        cmakefile = path.join(self.FOLDER_NAME, "CMakeLists.txt")
         shutil.move(cmakefile, path.join(self.FOLDER_NAME, "CMakeListsOriginal.cmake"))
         shutil.move("CMakeLists.txt", cmakefile)
 
@@ -87,8 +87,8 @@ class JsoncppConan(ConanFile):
             extra_command_line += " -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF"
         else:
             extra_command_line += " -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON"
-            
+
         if self.options.use_pic:
             extra_command_line += " -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
-    
+
         return extra_command_line
