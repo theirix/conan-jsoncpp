@@ -2,6 +2,7 @@ from conans import ConanFile, CMake, ConfigureEnvironment
 from conans.tools import download, untargz, check_sha1, replace_in_file
 import os
 import shutil
+import re
 from os import path
 
 class JsoncppConan(ConanFile):
@@ -52,10 +53,14 @@ class JsoncppConan(ConanFile):
 
         cmakefile_path = path.join(self.conanfile_directory, self.FOLDER_NAME)
 
-        cmd = '%s cmake %s %s %s' % (env.command_line, cmakefile_path, cmake.command_line, self.cmake_options())
+        # workaround for https://github.com/conan-io/conan/issues/968
+        command_line = re.sub(r'PATH$', '', env.command_line)
+        command_line = re.sub(r'"PATH=', '" PATH=', command_line)
+
+        cmd = '%s cmake %s %s %s' % (command_line, cmakefile_path, cmake.command_line, self.cmake_options())
         self.output.info('Running CMake: ' + cmd)
         self.run(cmd)
-        self.run("%s cmake --build . %s" % (env.command_line, cmake.build_config))
+        self.run("%s cmake --build . %s" % (command_line, cmake.build_config))
 
     def package(self):
         self.copy("*.h", dst="include", src="%s/include" % (self.FOLDER_NAME))
