@@ -16,6 +16,9 @@ class JsoncppConan(ConanFile):
     exports     = "CMakeLists.txt"
     generators  = "cmake", "txt"
 
+    # Workaround for long cmake binary path
+    short_paths = True
+
     options         = {
         "shared"    : [True, False],
         "use_pic"   : [True, False]
