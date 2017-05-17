@@ -78,6 +78,9 @@ class JsoncppConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
+        # cmake_installer lib directory doesn't exist
+        if self.deps_cpp_info["cmake_installer"].libdirs:
+            self.deps_cpp_info["cmake_installer"].libdirs = []
 
     def cmake_options(self):
         extra_command_line = '-DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_TESTS=OFF'
