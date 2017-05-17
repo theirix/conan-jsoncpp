@@ -1,5 +1,5 @@
 from conans import ConanFile, CMake
-from conans.tools import download, untargz, check_sha1, replace_in_file
+from conans.tools import download, untargz, check_sha1
 import os
 import shutil
 from os import path
