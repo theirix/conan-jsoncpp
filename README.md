@@ -19,9 +19,14 @@ The packages generated with this **conanfile** can be found in [conan.io](https:
     
 ## Reuse the packages
 
-### Basic setup
+### basic setup
 
     $ conan install jsoncpp/1.8.0@theirix/stable
+
+### Prerequirements
+
+    JsonCpp needs at least cmake 3.1 for building.
+		If you do not have one, specify flag jsoncpp:use_cmake_installer=True
     
 ### Project setup
 

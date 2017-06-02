@@ -19,29 +19,31 @@ class JsoncppConan(ConanFile):
     # Workaround for long cmake binary path
     short_paths = True
 
-    options         = {
-        "shared"    : [True, False],
-        "use_pic"   : [True, False]
+    options = {
+        "shared"              : [True, False],
+        "use_pic"             : [True, False],
+        "use_cmake_installer" : [True, False]
     }
     default_options = (
         "shared=False",
-        "use_pic=False"
+        "use_pic=False",
+        "use_cmake_installer=False"
     )
-
-    SHA1 = "40f7f34551012f68e822664a0b179e7e6cac5a97"
-
-    requires = "cmake_installer/0.1@lasote/stable"
 
     def configure(self):
         if self.options.shared:
             self.options.use_pic = True
+
+    def requirements(self):
+        if self.options.use_cmake_installer:
+            self.requires.add("cmake_installer/0.1@lasote/stable", private=False)
 
     def source(self):
         self.output.info("downloading source ...")
 
         tarball_name = self.FOLDER_NAME + '.tar.gz'
         download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
-        check_sha1(tarball_name, self.SHA1)
+        check_sha1(tarball_name, "40f7f34551012f68e822664a0b179e7e6cac5a97")
         untargz(tarball_name)
         os.unlink(tarball_name)
 
@@ -52,10 +54,12 @@ class JsoncppConan(ConanFile):
     def build(self):
         cmake = CMake(self.settings)
 
-        cmakefile_path = path.join(self.conanfile_directory, self.FOLDER_NAME)
-        cmake_path = path.join(self.deps_cpp_info["cmake_installer"].bin_paths[0], 'cmake')
+        if self.options.use_cmake_installer:
+            cmake_path = path.join(self.deps_cpp_info["cmake_installer"].bin_paths[0], 'cmake')
+        else:
+            cmake_path = 'cmake'
 
-        cmd = '%s %s %s %s' % (cmake_path, cmakefile_path, cmake.command_line, self.cmake_options())
+        cmd = '%s %s %s %s' % (cmake_path, self.FOLDER_NAME, cmake.command_line, self.cmake_options())
         self.output.info('Running CMake: ' + cmd)
         self.run(cmd)
         self.run("%s --build . %s" % (cmake_path, cmake.build_config))
@@ -79,7 +83,7 @@ class JsoncppConan(ConanFile):
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
         # cmake_installer lib directory doesn't exist
-        if self.deps_cpp_info["cmake_installer"].libdirs:
+        if self.options.use_cmake_installer and self.deps_cpp_info["cmake_installer"].libdirs:
             self.deps_cpp_info["cmake_installer"].libdirs = []
 
     def cmake_options(self):
