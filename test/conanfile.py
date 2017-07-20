@@ -1,9 +1,14 @@
 from conans import ConanFile, CMake
 import os
 
+channel = os.getenv("CONAN_CHANNEL", "testing")
+username = os.getenv("CONAN_USERNAME", "theirix")
+pkg_version = "1.8.0"
+
 class JsoncppTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
+    requires = "jsoncpp/%s@%s/%s" % (pkg_version, username, channel)
 
     def build(self):
         cmake = CMake(self)
