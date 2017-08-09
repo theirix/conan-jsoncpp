@@ -2,7 +2,6 @@ from conans import ConanFile, CMake
 from conans.tools import download, untargz, check_sha1
 import os
 import shutil
-from os import path
 
 class JsoncppConan(ConanFile):
     name        = "jsoncpp"
@@ -47,15 +46,15 @@ class JsoncppConan(ConanFile):
         untargz(tarball_name)
         os.unlink(tarball_name)
 
-        cmakefile = path.join(self.FOLDER_NAME, "CMakeLists.txt")
-        shutil.move(cmakefile, path.join(self.FOLDER_NAME, "CMakeListsOriginal.cmake"))
+        cmakefile = os.path.join(self.FOLDER_NAME, "CMakeLists.txt")
+        shutil.move(cmakefile, os.path.join(self.FOLDER_NAME, "CMakeListsOriginal.cmake"))
         shutil.move("CMakeLists.txt", cmakefile)
 
     def build(self):
         cmake = CMake(self.settings)
 
         if self.options.use_cmake_installer:
-            cmake_path = path.join(self.deps_cpp_info["cmake_installer"].bin_paths[0], 'cmake')
+            cmake_path = os.path.join(self.deps_cpp_info["cmake_installer"].bin_paths[0], 'cmake')
         else:
             cmake_path = 'cmake'
 
