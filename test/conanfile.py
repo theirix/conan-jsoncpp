@@ -3,7 +3,7 @@ import os
 
 channel = os.getenv("CONAN_CHANNEL", "testing")
 username = os.getenv("CONAN_USERNAME", "theirix")
-pkg_version = "1.8.0"
+pkg_version = "1.8.1"
 
 class JsoncppTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
