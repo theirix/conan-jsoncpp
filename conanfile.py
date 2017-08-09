@@ -65,6 +65,7 @@ class JsoncppConan(ConanFile):
         self.run("%s --build . %s" % (cmake_path, cmake.build_config))
 
     def package(self):
+        self.copy("license*", src="%s" % (self.FOLDER_NAME), dst="licenses", ignore_case=True, keep_path=False)
         self.copy("*.h", dst="include", src="%s/include" % (self.FOLDER_NAME))
         if self.options.shared:
             if self.settings.os == "Macos":
