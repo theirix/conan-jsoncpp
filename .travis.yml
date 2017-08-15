@@ -8,12 +8,12 @@ env:
      - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/jsoncpp"
 
 linux: &linux
-os: linux
+   os: linux
    sudo: required
    language: python
    python: "3.6"
-services:
- - docker
+   services:
+     - docker
 osx: &osx
    os: osx
    language: generic
