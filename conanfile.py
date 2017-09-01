@@ -5,7 +5,7 @@ import shutil
 
 class JsoncppConan(ConanFile):
     name        = "jsoncpp"
-    version     = "1.8.1"
+    version     = "1.8.3"
     description = "A C++ library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
@@ -42,7 +42,7 @@ class JsoncppConan(ConanFile):
 
         tarball_name = self.FOLDER_NAME + '.tar.gz'
         download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
-        check_sha1(tarball_name, "c91541b2dcc575ff8004e69caa5d2360bd4d042a")
+        check_sha1(tarball_name, "8e0c8bb90bb477422a13762d7c7b5450dd0f4ca5")
         untargz(tarball_name)
         os.unlink(tarball_name)
 
