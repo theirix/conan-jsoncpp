@@ -46,7 +46,17 @@ class JsoncppConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_dir=self.FOLDER_NAME, build_dir="./")
+
+        defs = dict()
+        defs['JSONCPP_WITH_CMAKE_PACKAGE'] = True
+        defs['JSONCPP_WITH_TESTS'] = False
+        defs['BUILD_SHARED_LIBS'] = self.options.shared
+        defs['BUILD_STATIC_LIBS'] = not self.options.shared
+
+        if self.options.use_pic:
+            defs['CMAKE_POSITION_INDEPENDENT_CODE'] = True
+
+        cmake.configure(source_dir=self.FOLDER_NAME, build_dir="./", defs=defs)
         cmake.build()
 
     def package(self):
@@ -68,15 +78,3 @@ class JsoncppConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
-
-    def cmake_options(self):
-        extra_command_line = '-DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_TESTS=OFF'
-        if self.options.shared:
-            extra_command_line += " -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF"
-        else:
-            extra_command_line += " -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON"
-
-        if self.options.use_pic:
-            extra_command_line += " -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
-
-        return extra_command_line
