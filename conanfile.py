@@ -20,22 +20,16 @@ class JsoncppConan(ConanFile):
 
     options = {
         "shared"              : [True, False],
-        "use_pic"             : [True, False],
-        "use_cmake_installer" : [True, False]
+        "use_pic"             : [True, False]
     }
     default_options = (
         "shared=False",
-        "use_pic=False",
-        "use_cmake_installer=False"
+        "use_pic=False"
     )
 
     def configure(self):
         if self.options.shared:
             self.options.use_pic = True
-
-    def requirements(self):
-        if self.options.use_cmake_installer:
-            self.requires.add("cmake_installer/0.1@lasote/stable", private=False)
 
     def source(self):
         self.output.info("downloading source ...")
@@ -51,17 +45,9 @@ class JsoncppConan(ConanFile):
         shutil.move("CMakeLists.txt", cmakefile)
 
     def build(self):
-        cmake = CMake(self.settings)
-
-        if self.options.use_cmake_installer:
-            cmake_path = os.path.join(self.deps_cpp_info["cmake_installer"].bin_paths[0], 'cmake')
-        else:
-            cmake_path = 'cmake'
-
-        cmd = '%s %s %s %s' % (cmake_path, self.FOLDER_NAME, cmake.command_line, self.cmake_options())
-        self.output.info('Running CMake: ' + cmd)
-        self.run(cmd)
-        self.run("%s --build . %s" % (cmake_path, cmake.build_config))
+        cmake = CMake(self)
+        cmake.configure(source_dir=self.FOLDER_NAME, build_dir="./")
+        cmake.build()
 
     def package(self):
         self.copy("license*", src="%s" % (self.FOLDER_NAME), dst="licenses", ignore_case=True, keep_path=False)
@@ -82,9 +68,6 @@ class JsoncppConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
-        # cmake_installer lib directory doesn't exist
-        if self.options.use_cmake_installer and self.deps_cpp_info["cmake_installer"].libdirs:
-            self.deps_cpp_info["cmake_installer"].libdirs = []
 
     def cmake_options(self):
         extra_command_line = '-DJSONCPP_WITH_CMAKE_PACKAGE=ON -DJSONCPP_WITH_TESTS=OFF'
