@@ -5,7 +5,7 @@ env:
      - CONAN_USERNAME: "theirix"
      - CONAN_LOGIN_USERNAME: "theirix"
      - CONAN_CHANNEL: "ci"
-     - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/jsoncpp"
+     - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/conan-repo"
 
 linux: &linux
    os: linux
