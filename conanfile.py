@@ -9,10 +9,12 @@ class JsoncppConan(ConanFile):
     description = "A C++ library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
+    homepage    = "https://github.com/open-source-parsers/jsoncpp"
     FOLDER_NAME = 'jsoncpp-%s' % version
     settings    = "os", "compiler", "arch", "build_type"
 
-    exports     = "CMakeLists.txt"
+    exports = ["LICENSE.md"]
+    exports_sources = ["CMakeLists.txt"]
     generators  = "cmake", "txt"
 
     # Workaround for long cmake binary path
