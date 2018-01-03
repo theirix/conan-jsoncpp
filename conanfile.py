@@ -1,5 +1,4 @@
-from conans import ConanFile, CMake
-from conans.tools import download, untargz, check_sha1
+from conans import ConanFile, CMake, tools
 import os
 import shutil
 
@@ -34,31 +33,24 @@ class JsoncppConan(ConanFile):
             self.options.use_pic = True
 
     def source(self):
-        self.output.info("downloading source ...")
-
-        tarball_name = self.FOLDER_NAME + '.tar.gz'
-        download("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, tarball_name)
-        check_sha1(tarball_name, "8e0c8bb90bb477422a13762d7c7b5450dd0f4ca5")
-        untargz(tarball_name)
-        os.unlink(tarball_name)
+        tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version)
 
         cmakefile = os.path.join(self.FOLDER_NAME, "CMakeLists.txt")
-        shutil.move(cmakefile, os.path.join(self.FOLDER_NAME, "CMakeListsOriginal.cmake"))
+        shutil.move(cmakefile, os.path.join(self.FOLDER_NAME, "CMakeListsOriginal.txt"))
         shutil.move("CMakeLists.txt", cmakefile)
 
     def build(self):
         cmake = CMake(self)
 
-        defs = dict()
-        defs['JSONCPP_WITH_CMAKE_PACKAGE'] = True
-        defs['JSONCPP_WITH_TESTS'] = False
-        defs['BUILD_SHARED_LIBS'] = self.options.shared
-        defs['BUILD_STATIC_LIBS'] = not self.options.shared
+        cmake.definitions['JSONCPP_WITH_CMAKE_PACKAGE'] = True
+        cmake.definitions['JSONCPP_WITH_TESTS'] = False
+        cmake.definitions['BUILD_SHARED_LIBS'] = self.options.shared
+        cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
 
         if self.options.use_pic:
-            defs['CMAKE_POSITION_INDEPENDENT_CODE'] = True
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
 
-        cmake.configure(source_dir=self.FOLDER_NAME, build_dir="./", defs=defs)
+        cmake.configure(source_dir=self.FOLDER_NAME, build_dir="./")
         cmake.build()
 
     def package(self):

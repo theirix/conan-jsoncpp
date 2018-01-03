@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
-PROJECT(conan-jsoncpp)
+project(cmake_wrapper)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/../conanbuildinfo.cmake)
-CONAN_BASIC_SETUP()
-include("CMakeListsOriginal.cmake")
+conan_basic_setup()
+
+include("CMakeListsOriginal.txt")
