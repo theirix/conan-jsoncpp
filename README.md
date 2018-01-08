@@ -17,7 +17,7 @@ The packages generated with this **conanfile** can be found in [bintray](https:/
 
 ### basic setup
 
-    $ conan install jsoncpp/1.8.3@theirix/stable
+    $ conan install jsoncpp/1.8.4@theirix/stable
 
 ### Prerequirements
 
@@ -29,7 +29,7 @@ The packages generated with this **conanfile** can be found in [bintray](https:/
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
     
     [requires]
-    jsoncpp/1.8.3@theirix/stable
+    jsoncpp/1.8.4@theirix/stable
 
     [options]
     jsoncpp:shared=true # false

@@ -3,7 +3,7 @@ import os
 
 class JsoncppConan(ConanFile):
     name        = "jsoncpp"
-    version     = "1.8.3"
+    version     = "1.8.4"
     description = "A C++ library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
