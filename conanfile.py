@@ -1,6 +1,5 @@
 from conans import ConanFile, CMake, tools
 import os
-import shutil
 
 class JsoncppConan(ConanFile):
     name        = "jsoncpp"
@@ -9,7 +8,6 @@ class JsoncppConan(ConanFile):
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     homepage    = "https://github.com/open-source-parsers/jsoncpp"
-    FOLDER_NAME = 'jsoncpp-%s' % version
     settings    = "os", "compiler", "arch", "build_type"
 
     exports = ["LICENSE.md"]
@@ -34,10 +32,9 @@ class JsoncppConan(ConanFile):
 
     def source(self):
         tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version)
-
-        cmakefile = os.path.join(self.FOLDER_NAME, "CMakeLists.txt")
-        shutil.move(cmakefile, os.path.join(self.FOLDER_NAME, "CMakeListsOriginal.txt"))
-        shutil.move("CMakeLists.txt", cmakefile)
+        os.rename("jsoncpp-%s" % self.version, "sources")
+        os.rename("sources/CMakeLists.txt", "sources/CMakeListsOriginal.txt")
+        os.rename("CMakeLists.txt", "sources/CMakeLists.txt")
 
     def build(self):
         cmake = CMake(self)
@@ -46,16 +43,14 @@ class JsoncppConan(ConanFile):
         cmake.definitions['JSONCPP_WITH_TESTS'] = False
         cmake.definitions['BUILD_SHARED_LIBS'] = self.options.shared
         cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
+        cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
 
-        if self.options.use_pic:
-            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = True
-
-        cmake.configure(source_dir=self.FOLDER_NAME, build_dir="./")
+        cmake.configure(source_dir="sources", build_dir="./")
         cmake.build()
 
     def package(self):
-        self.copy("license*", src="%s" % (self.FOLDER_NAME), dst="licenses", ignore_case=True, keep_path=False)
-        self.copy("*.h", dst="include", src="%s/include" % (self.FOLDER_NAME))
+        self.copy("license*", src="sources", dst="licenses", ignore_case=True, keep_path=False)
+        self.copy("*.h", dst="include", src="sources/include")
         if self.options.shared:
             if self.settings.os == "Macos":
                 self.copy(pattern="*.dylib", dst="lib", keep_path=False)
