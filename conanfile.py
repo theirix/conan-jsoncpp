@@ -1,10 +1,13 @@
 from conans import ConanFile, CMake, tools
 import os
 
+
 class JsoncppConan(ConanFile):
+    """ requires C++11 to build and consume
+    """
     name        = "jsoncpp"
     version     = "1.8.4"
-    description = "A C++ library for interacting with JSON."
+    description = "A C++11 library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     homepage    = "https://github.com/open-source-parsers/jsoncpp"
@@ -57,11 +60,13 @@ class JsoncppConan(ConanFile):
             elif self.settings.os == "Windows":
                 self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
                 self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
+                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
             else:
                 self.copy(pattern="*.so*", dst="lib", keep_path=False)
         else:
             if self.settings.os == "Windows":
                 self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
+                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
             else:
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
 
