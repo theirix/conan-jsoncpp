@@ -1,3 +1,5 @@
 test/build/
 test_package/build/
 *.pyc
+build
+sources

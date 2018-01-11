@@ -1,13 +1,11 @@
 from conans import ConanFile, CMake, tools
-import os
+import os, shutil
 
 
 class JsoncppConan(ConanFile):
-    """ requires C++11 to build and consume
-    """
     name        = "jsoncpp"
     version     = "1.8.4"
-    description = "A C++11 library for interacting with JSON."
+    description = "A C++ library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     homepage    = "https://github.com/open-source-parsers/jsoncpp"
@@ -18,7 +16,7 @@ class JsoncppConan(ConanFile):
     generators  = "cmake", "txt"
 
     # Workaround for long cmake binary path
-    short_paths = True
+    # short_paths = True
 
     options = {
         "shared"              : [True, False],
@@ -37,7 +35,7 @@ class JsoncppConan(ConanFile):
         tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version)
         os.rename("jsoncpp-%s" % self.version, "sources")
         os.rename("sources/CMakeLists.txt", "sources/CMakeListsOriginal.txt")
-        os.rename("CMakeLists.txt", "sources/CMakeLists.txt")
+        shutil.copy("CMakeLists.txt", "sources/CMakeLists.txt")
 
     def build(self):
         cmake = CMake(self)
@@ -48,7 +46,7 @@ class JsoncppConan(ConanFile):
         cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
         cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
 
-        cmake.configure(source_dir="sources", build_dir="./")
+        cmake.configure(source_folder="sources")
         cmake.build()
 
     def package(self):
