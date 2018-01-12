@@ -1,5 +1,6 @@
 from conans import ConanFile, CMake, tools
-import os
+import os, shutil
+
 
 class JsoncppConan(ConanFile):
     name        = "jsoncpp"
@@ -15,7 +16,7 @@ class JsoncppConan(ConanFile):
     generators  = "cmake", "txt"
 
     # Workaround for long cmake binary path
-    short_paths = True
+    # short_paths = True
 
     options = {
         "shared"              : [True, False],
@@ -34,7 +35,7 @@ class JsoncppConan(ConanFile):
         tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version)
         os.rename("jsoncpp-%s" % self.version, "sources")
         os.rename("sources/CMakeLists.txt", "sources/CMakeListsOriginal.txt")
-        os.rename("CMakeLists.txt", "sources/CMakeLists.txt")
+        shutil.copy("CMakeLists.txt", "sources/CMakeLists.txt")
 
     def build(self):
         cmake = CMake(self)
@@ -45,7 +46,7 @@ class JsoncppConan(ConanFile):
         cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
         cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
 
-        cmake.configure(source_dir="sources", build_dir="./")
+        cmake.configure(source_folder="sources")
         cmake.build()
 
     def package(self):
@@ -57,11 +58,13 @@ class JsoncppConan(ConanFile):
             elif self.settings.os == "Windows":
                 self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
                 self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
+                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
             else:
                 self.copy(pattern="*.so*", dst="lib", keep_path=False)
         else:
             if self.settings.os == "Windows":
                 self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
+                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
             else:
                 self.copy(pattern="*.a", dst="lib", keep_path=False)
 
