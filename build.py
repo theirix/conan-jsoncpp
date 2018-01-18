@@ -3,7 +3,7 @@ import copy
 import platform
 
 if __name__ == "__main__":
-    builder = ConanMultiPackager(stable_branch_pattern="stable/*")
+    builder = ConanMultiPackager()
     builder.add_common_builds(shared_option_name="jsoncpp:shared", pure_c=False)
 
     builds = []
