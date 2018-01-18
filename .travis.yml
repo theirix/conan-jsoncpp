@@ -4,7 +4,7 @@ env:
      - CONAN_REFERENCE: "jsoncpp/1.8.4"
      - CONAN_USERNAME: "theirix"
      - CONAN_LOGIN_USERNAME: "theirix"
-     - CONAN_CHANNEL: "testing"
+     - CONAN_CHANNEL: "stable"
      - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/conan-repo"
 
 linux: &linux
