@@ -38,6 +38,10 @@ class JsoncppConan(ConanFile):
         shutil.copy("CMakeLists.txt", "sources/CMakeLists.txt")
 
     def build(self):
+        if self.settings.compiler == "Visual Studio" and self.settings.compiler.version == "11":
+            tools.replace_in_file(os.path.join("sources", "include", "json", "value.h"),
+                                  "explicit operator bool()",
+                                  "operator bool()")
         cmake = CMake(self)
 
         cmake.definitions['JSONCPP_WITH_CMAKE_PACKAGE'] = True
