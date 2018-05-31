@@ -1,9 +1,3 @@
-env:
-   global:
-     - CONAN_USERNAME: "theirix"
-     - CONAN_LOGIN_USERNAME: "theirix"
-     - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/conan-repo"
-
 linux: &linux
    os: linux
    sudo: required
@@ -28,6 +22,8 @@ matrix:
         env: CONAN_CLANG_VERSIONS=3.9 CONAN_DOCKER_IMAGE=lasote/conanclang39
       - <<: *linux
         env: CONAN_CLANG_VERSIONS=4.0 CONAN_DOCKER_IMAGE=lasote/conanclang40
+      - <<: *linux
+        env: CONAN_CLANG_VERSIONS=5.0 CONAN_DOCKER_IMAGE=lasote/conanclang50
       - <<: *osx
         osx_image: xcode7.3
         env: CONAN_APPLE_CLANG_VERSIONS=7.3
