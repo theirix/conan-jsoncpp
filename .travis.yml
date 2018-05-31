@@ -1,10 +1,7 @@
-
 env:
    global:
-     - CONAN_REFERENCE: "jsoncpp/1.8.4"
      - CONAN_USERNAME: "theirix"
      - CONAN_LOGIN_USERNAME: "theirix"
-     - CONAN_CHANNEL: "stable"
      - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/conan-repo"
 
 linux: &linux
@@ -40,6 +37,9 @@ matrix:
       - <<: *osx
         osx_image: xcode9
         env: CONAN_APPLE_CLANG_VERSIONS=9.0
+      - <<: *osx
+        osx_image: xcode9.3
+        env: CONAN_APPLE_CLANG_VERSIONS=9.1
 
 install:
   - chmod +x .travis/install.sh
@@ -47,4 +47,4 @@ install:
 
 script:
   - chmod +x .travis/run.sh
-  - ./.travis/run.sh
+- ./.travis/run.sh
