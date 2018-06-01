@@ -6,6 +6,8 @@ env:
      - CONAN_LOGIN_USERNAME: "theirix"
      - CONAN_CHANNEL: "testing"
      - CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/conan-repo"
+     - CONAN_UPLOAD_ONLY_WHEN_STABLE: True
+     - CONAN_STABLE_BRANCH_PATTERN: "stable/*"
 
 linux: &linux
    os: linux
