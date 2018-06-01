@@ -36,6 +36,10 @@ class JsoncppConan(ConanFile):
         cmake.definitions['JSONCPP_WITH_CMAKE_PACKAGE'] = True
         cmake.definitions['JSONCPP_WITH_TESTS'] = False
         cmake.definitions['JSONCPP_WITH_PKGCONFIG_SUPPORT'] = False
+        # since 1.6.5
+        cmake.definitions['BUILD_SHARED_LIBS'] = self.options.shared
+        cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
+        # before 1.6.5
         cmake.definitions['JSONCPP_LIB_BUILD_SHARED'] = self.options.shared
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
