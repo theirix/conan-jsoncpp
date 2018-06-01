@@ -10,7 +10,7 @@ class JsoncppConan(ConanFile):
     version     = "1.0.0"
     description = "A C++ library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
-    license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
+    license     = "MIT"
     homepage    = "https://github.com/open-source-parsers/jsoncpp"
     author      = "theirix"
     settings    = "os", "compiler", "arch", "build_type"
