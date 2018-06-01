@@ -41,8 +41,9 @@ class JsoncppConan(ConanFile):
         cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
         # before 1.6.5
         cmake.definitions['JSONCPP_LIB_BUILD_SHARED'] = self.options.shared
-        # special handling of use_pic (not fPIC) option
-        cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
+        if self.settings.os != "Windows":
+            # special handling of use_pic (not fPIC) option
+            cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
 
