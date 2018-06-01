@@ -33,7 +33,7 @@ If you handle multiple dependencies in your project is better to add a *conanfil
 
     [options]
     jsoncpp:shared=true # false
-    jsoncpp:fPIC=true # false (Only for Linux)
+    jsoncpp:use_pic=true # false (Only for Linux)
 
     [generators]
     txt

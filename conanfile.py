@@ -17,14 +17,14 @@ class JsoncppConan(ConanFile):
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators  = "cmake"
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = ("shared=False", "fPIC=True")
+    options = {"shared": [True, False], "use_pic": [True, False]}
+    default_options = ("shared=False", "use_pic=True")
     source_subfolder = "source_subfolder"
     build_subfolder = "build_subfolder"
 
     def config_options(self):
         if self.settings.os == "Windows":
-            self.options.remove('fPIC')
+            self.options.remove('use_pic')
 
     def source(self):
         tools.get("{0}/archive/{1}.tar.gz".format(self.homepage, self.version))
@@ -41,6 +41,8 @@ class JsoncppConan(ConanFile):
         cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
         # before 1.6.5
         cmake.definitions['JSONCPP_LIB_BUILD_SHARED'] = self.options.shared
+        # special handling of use_pic (not fPIC) option
+        cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
         cmake.configure(build_folder=self.build_subfolder)
         return cmake
 
