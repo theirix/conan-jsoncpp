@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from conans import ConanFile, CMake, tools
-import os, shutil
+import os
 
 
 class JsoncppConan(ConanFile):
@@ -9,68 +12,46 @@ class JsoncppConan(ConanFile):
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "Public Domain or MIT (https://github.com/open-source-parsers/jsoncpp/blob/master/LICENSE)"
     homepage    = "https://github.com/open-source-parsers/jsoncpp"
+    author      = "theirix"
     settings    = "os", "compiler", "arch", "build_type"
-
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
-    generators  = "cmake", "txt"
+    generators  = "cmake"
+    options = {"shared": [True, False], "fPIC": [True, False]}
+    default_options = ("shared=False", "fPIC=True")
+    source_subfolder = "source_subfolder"
+    build_subfolder = "build_subfolder"
 
-    # Workaround for long cmake binary path
-    # short_paths = True
-
-    options = {
-        "shared"              : [True, False],
-        "use_pic"             : [True, False]
-    }
-    default_options = (
-        "shared=False",
-        "use_pic=False"
-    )
-
-    def configure(self):
-        if self.options.shared:
-            self.options.use_pic = True
+    def config_options(self):
+        if self.settings.os == "Windows":
+            self.options.remove('fPIC')
 
     def source(self):
-        tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version)
-        os.rename("jsoncpp-%s" % self.version, "sources")
-        os.rename("sources/CMakeLists.txt", "sources/CMakeListsOriginal.txt")
-        shutil.copy("CMakeLists.txt", "sources/CMakeLists.txt")
+        tools.get("{0}/archive/{1}.tar.gz".format(self.homepage, self.version))
+        extracted_dir = self.name + "-" + self.version
+        os.rename(extracted_dir, self.source_subfolder)
+
+    def configure_cmake(self):
+        cmake = CMake(self)
+        cmake.definitions['JSONCPP_WITH_CMAKE_PACKAGE'] = True
+        cmake.definitions['JSONCPP_WITH_TESTS'] = False
+        cmake.definitions['JSONCPP_WITH_PKGCONFIG_SUPPORT'] = False
+        cmake.definitions['JSONCPP_LIB_BUILD_SHARED'] = self.options.shared
+        cmake.configure(build_folder=self.build_subfolder)
+        return cmake
 
     def build(self):
         if self.settings.compiler == "Visual Studio" and self.settings.compiler.version == "11":
-            tools.replace_in_file(os.path.join("sources", "include", "json", "value.h"),
+            tools.replace_in_file(os.path.join(self.source_subfolder, "include", "json", "value.h"),
                                   "explicit operator bool()",
                                   "operator bool()")
-        cmake = CMake(self)
-
-        cmake.definitions['JSONCPP_WITH_CMAKE_PACKAGE'] = True
-        cmake.definitions['JSONCPP_WITH_TESTS'] = False
-        cmake.definitions['BUILD_SHARED_LIBS'] = self.options.shared
-        cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
-        cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
-
-        cmake.configure(source_folder="sources")
+        cmake = self.configure_cmake()
         cmake.build()
 
     def package(self):
-        self.copy("license*", src="sources", dst="licenses", ignore_case=True, keep_path=False)
-        self.copy("*.h", dst="include", src="sources/include")
-        if self.options.shared:
-            if self.settings.os == "Macos":
-                self.copy(pattern="*.dylib", dst="lib", keep_path=False)
-            elif self.settings.os == "Windows":
-                self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
-                self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
-                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
-            else:
-                self.copy(pattern="*.so*", dst="lib", keep_path=False)
-        else:
-            if self.settings.os == "Windows":
-                self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
-                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
-            else:
-                self.copy(pattern="*.a", dst="lib", keep_path=False)
+        self.copy("LICENSE", src=self.source_subfolder, dst="licenses")
+        cmake = self.configure_cmake()
+        cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ['jsoncpp']
+        self.cpp_info.libs = tools.collect_libs(self)

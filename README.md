@@ -12,7 +12,7 @@ The packages generated with this **conanfile** can be found in [bintray](https:/
 
     $ pip install conan_package_tools
     $ python build.py
-    
+
 ## Reuse the packages
 
 ### basic setup
@@ -23,23 +23,24 @@ The packages generated with this **conanfile** can be found in [bintray](https:/
 
     JsonCpp needs at least cmake 3.1 for building.
     If you do not have one, specify flag jsoncpp:use_cmake_installer=True
-    
+
 ### Project setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
-    
+
     [requires]
     jsoncpp/1.0.0@theirix/stable
 
     [options]
     jsoncpp:shared=true # false
-    
+    jsoncpp:fPIC=true # false (Only for Linux)
+
     [generators]
     txt
     cmake
 
 Complete the installation of requirements for your project running:
 
-    conan install . 
+    conan install .
 
 Project setup installs the library (and all his dependencies) and generates the files *conanbuildinfo.txt* and *conanbuildinfo.cmake* with all the paths and variables that you need to link with your dependencies.
