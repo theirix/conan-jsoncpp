@@ -10,6 +10,8 @@ environment:
     CONAN_LOGIN_USERNAME: "theirix"
     CONAN_CHANNEL: "stable"
     CONAN_UPLOAD: "https://api.bintray.com/conan/theirix/conan-repo"
+    CONAN_UPLOAD_ONLY_WHEN_STABLE: True
+    CONAN_STABLE_BRANCH_PATTERN: "stable/*"
 
     matrix:
         - MINGW_CONFIGURATIONS: '4.9@x86_64@seh@posix, 4.9@x86_64@sjlj@posix, 4.9@x86@sjlj@posix, 4.9@x86@dwarf2@posix, 6.3@x86_64@seh@posix, 7.1@x86_64@seh@posix'
