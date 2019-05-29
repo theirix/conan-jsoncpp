@@ -35,7 +35,8 @@ class JsoncppConan(ConanFile):
             self.options.use_pic = True
 
     def source(self):
-        tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version)
+        checksum = "c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6"
+        tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, sha256=checksum)
         os.rename("jsoncpp-%s" % self.version, self._source_subfolder)
         os.rename(os.path.join(self._source_subfolder, "CMakeLists.txt"),
                   os.path.join(self._source_subfolder, "CMakeListsOriginal.txt"))
