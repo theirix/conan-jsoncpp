@@ -57,25 +57,10 @@ class JsoncppConan(ConanFile):
 
         cmake.configure(source_folder=self._source_subfolder)
         cmake.build()
+        cmake.install()
 
     def package(self):
         self.copy("license*", src=self._source_subfolder, dst="licenses", ignore_case=True, keep_path=False)
-        self.copy("*.h", dst="include", src=os.path.join(self._source_subfolder, "include"))
-        if self.options.shared:
-            if self.settings.os == "Macos":
-                self.copy(pattern="*.dylib", dst="lib", keep_path=False)
-            elif self.settings.os == "Windows":
-                self.copy(pattern="*.dll", dst="bin", src="bin", keep_path=False)
-                self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
-                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
-            else:
-                self.copy(pattern="*.so*", dst="lib", keep_path=False)
-        else:
-            if self.settings.os == "Windows":
-                self.copy(pattern="*.lib", dst="lib", src="lib", keep_path=False)
-                self.copy(pattern="*.a", dst="lib", src="lib", keep_path=False)
-            else:
-                self.copy(pattern="*.a", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ['jsoncpp']
