@@ -23,10 +23,10 @@ class JsoncppConan(ConanFile):
         "shared"              : [True, False],
         "use_pic"             : [True, False]
     }
-    default_options = (
-        "shared=False",
-        "use_pic=False"
-    )
+    default_options = {
+        "shared": False,
+        "use_pic": False
+    }
 
     _source_subfolder = "source_subfolder"
 
