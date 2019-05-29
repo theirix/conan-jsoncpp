@@ -16,8 +16,8 @@ class TestPackageConan(ConanFile):
 
     def imports(self):
         self.copy("*.dll", dst="bin", src="bin")
-        self.copy("*.so", dst="bin", src="lib")        
-        self.copy("*.dylib*", dst="bin", src="lib")
+        self.copy("*.so", dst="lib", src="lib")
+        self.copy("*.dylib*", dst="lib", src="lib")
 
     def test(self):
         bin_path = os.path.join("bin", "test_package")
