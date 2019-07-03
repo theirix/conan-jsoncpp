@@ -3,7 +3,7 @@ build: false
 environment:
     PYTHON_HOME: "C:\\Python37"
 
-    CONAN_REFERENCE: "jsoncpp/1.8.4"
+    CONAN_REFERENCE: "jsoncpp/1.9.0"
     CONAN_USERNAME: "theirix"
     CONAN_LOGIN_USERNAME: "theirix"
     CONAN_CHANNEL: "stable"
