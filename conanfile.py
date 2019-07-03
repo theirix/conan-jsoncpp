@@ -4,7 +4,7 @@ import os, shutil
 
 class JsoncppConan(ConanFile):
     name        = "jsoncpp"
-    version     = "1.8.4"
+    version     = "1.9.0"
     description = "A C++ library for interacting with JSON."
     url         = "https://github.com/theirix/conan-jsoncpp"
     license     = "MIT"
@@ -35,7 +35,7 @@ class JsoncppConan(ConanFile):
             self.options.use_pic = True
 
     def source(self):
-        checksum = "c49deac9e0933bcb7044f08516861a2d560988540b23de2ac1ad443b219afdb6"
+        checksum = "bdd3ba9ed1f110b3eb57474d9094e90ab239b93b4803b4f9b1722c281e85a4ac"
         tools.get("https://github.com/open-source-parsers/jsoncpp/archive/%s.tar.gz" % self.version, sha256=checksum)
         os.rename("jsoncpp-%s" % self.version, self._source_subfolder)
         os.rename(os.path.join(self._source_subfolder, "CMakeLists.txt"),
