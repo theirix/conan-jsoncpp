@@ -53,7 +53,6 @@ class JsoncppConan(ConanFile):
         cmake.definitions['JSONCPP_WITH_CMAKE_PACKAGE'] = True
         cmake.definitions['JSONCPP_WITH_TESTS'] = False
         cmake.definitions['BUILD_SHARED_LIBS'] = self.options.shared
-        cmake.definitions['BUILD_STATIC_LIBS'] = not self.options.shared
         # keep this setting because Conan relies on an option fPIC
         cmake.definitions['CMAKE_POSITION_INDEPENDENT_CODE'] = self.options.use_pic
 
