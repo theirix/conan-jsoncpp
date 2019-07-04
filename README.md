@@ -21,7 +21,7 @@ The packages generated with this **conanfile** can be found in [bintray](https:/
 
 ### Prerequirements
 
-    JsonCpp needs at least cmake 3.1 for building.
+    JsonCpp needs at least cmake 3.12 for building.
     If you do not have one, specify flag jsoncpp:use_cmake_installer=True
     
 ### Project setup
